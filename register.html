@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Auth Test Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .hidden {
+            display: none;
+        }
+        #message-box {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-size: 0.875rem;
+            z-index: 50;
+            max-width: 320px;
+        }
+        #message-box.success {
+            background-color: #d1fae5; 
+            color: #065f46; 
+        }
+        #message-box.error {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans antialiased">
+
+    <div id="auth-view">
+        <div class="flex justify-center items-center min-h-screen">
+            <div class="p-8 bg-white rounded-lg shadow-2xl w-full max-w-md">
+                
+                <div id="login-form-container">
+                    <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Login</h1>
+                    <form id="login-form" class="space-y-6">
+                        <div>
+                            <label for="login-email" class="block text-sm font-medium text-gray-700">Email</label>
+                            <input id="login-email" type="email" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="you@example.com" />
+                        </div>
+                        <div>
+                            <label for="login-password" class="block text-sm font-medium text-gray-700">Password</label>
+                            <input id="login-password" type="password" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="••••••••" />
+                        </div>
+                        <div class="text-sm text-right">
+                            <a href="#" id="show-reset-link" class="font-medium text-blue-600 hover:text-blue-500">Forgot password?</a>
+                        </div>
+                        <div>
+                            <button type="submit" id="login-button" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">Sign In</button>
+                        </div>
+                    </form>
+                    <p class="text-center text-gray-500 text-sm mt-6">
+                        Need an account?
+                        <a href="#" id="show-register-link" class="font-medium text-blue-600 hover:text-blue-500">Register here</a>
+                    </p>
+                </div>
+
+                <div id="register-form-container" class="hidden">
+                    <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Create Account</h1>
+                    <form id="register-form" class="space-y-6">
+                         <div>
+                            <label for="register-email" class="block text-sm font-medium text-gray-700">Email</label>
+                            <input id="register-email" type="email" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="you@example.com" />
+                        </div>
+                        <div>
+                            <label for="register-username" class="block text-sm font-medium text-gray-700">Username</label>
+                            <input id="register-username" type="text" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Enter your username" />
+                        </div>
+                        <div>
+                            <label for="register-password" class="block text-sm font-medium text-gray-700">Password</label>
+                            <input id="register-password" type="password" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="At least 6 characters" />
+                        </div>
+                        <div>
+                            <button type="submit" id="register-button" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">Create Account</button>
+                        </div>
+                    </form>
+                    <p class="text-center text-gray-500 text-sm mt-6">
+                        Already have an account?
+                        <a href="#" id="show-login-link-1" class="font-medium text-blue-600 hover:text-blue-500">Login here</a>
+                    </p>
+                </div>
+
+                <div id="reset-form-container" class="hidden">
+                    <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Reset Password</h1>
+                    <p class="text-center text-gray-600 mb-6 text-sm">
+                        Enter your email and we'll send you a link to get back into your account.
+                    </p>
+                    <form id="reset-form" class="space-y-6">
+                        <div>
+                            <label for="reset-email" class="block text-sm font-medium text-gray-700">Email</label>
+                            <input id="reset-email" type="email" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="you@example.com" />
+                        </div>
+                        <div>
+                            <button type="submit" id="reset-button" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">Send Reset Link</button>
+                        </div>
+                    </form>
+                    <p class="text-center text-gray-500 text-sm mt-6">
+                        <a href="#" id="show-login-link-2" class="font-medium text-blue-600 hover:text-blue-500">&larr; Back to Login</a>
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="success-view" class="hidden">
+        <div class="flex justify-center items-center min-h-screen">
+             <div class="p-8 bg-white rounded-lg shadow-2xl w-full max-w-md text-center">
+                <h1 class="text-3xl font-bold text-green-600 mb-4">Success!</h1>
+                <p class="text-lg text-gray-700 mb-6">You are logged in as:</p>
+                <p id="user-email" class="text-xl font-medium text-blue-700 mb-8 break-all"></p>
+                <button id="sign-out-button" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none">
+                    Sign Out
+                </button>
+             </div>
+        </div>
+    </div>
+    <div id="message-box"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            sendPasswordResetEmail,
+            signOut,
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyD0t8JMomLOoTMjdenfjmdN1-W0iGqxMjE",
+          authDomain: "e-learning-b8610.firebaseapp.com",
+          projectId: "e-learning-b8610",
+          storageBucket: "e-learning-b8610.firebasestorage.app",
+          messagingSenderId: "1037485332601",
+          appId: "1:1037485332601:web:b12330d69841fadc581ca8"
+        };
+  
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const authView = document.getElementById('auth-view');
+        const successView = document.getElementById('success-view');
+        const userEmailElement = document.getElementById('user-email');
+        const signOutButton = document.getElementById('sign-out-button');
+        const messageBox = document.getElementById('message-box');
+
+        const loginFormContainer = document.getElementById('login-form-container');
+        const registerFormContainer = document.getElementById('register-form-container');
+        const resetFormContainer = document.getElementById('reset-form-container');
+
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const resetForm = document.getElementById('reset-form');
+        
+        const showRegisterLink = document.getElementById('show-register-link');
+        const showLoginLink1 = document.getElementById('show-login-link-1');
+        const showLoginLink2 = document.getElementById('show-login-link-2');
+        const showResetLink = document.getElementById('show-reset-link');
+
+        function showLogin() {
+            loginFormContainer.classList.remove('hidden');
+            registerFormContainer.classList.add('hidden');
+            resetFormContainer.classList.add('hidden');
+        }
+        function showRegister() {
+            loginFormContainer.classList.add('hidden');
+            registerFormContainer.classList.remove('hidden');
+            resetFormContainer.classList.add('hidden');
+        }
+        function showReset() {
+            loginFormContainer.classList.add('hidden');
+            registerFormContainer.classList.add('hidden');
+            resetFormContainer.classList.remove('hidden');
+        }
+        showRegisterLink.addEventListener('click', (e) => { e.preventDefault(); showRegister(); });
+        showLoginLink1.addEventListener('click', (e) => { e.preventDefault(); showLogin(); });
+        showLoginLink2.addEventListener('click', (e) => { e.preventDefault(); showLogin(); });
+        showResetLink.addEventListener('click', (e) => { e.preventDefault(); showReset(); });
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                userEmailElement.textContent = user.email;
+                authView.classList.add('hidden');
+                successView.classList.remove('hidden');
+            } else {
+                authView.classList.remove('hidden');
+                successView.classList.add('hidden');
+                showLogin(); 
+            }
+        });
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const button = document.getElementById('login-button');
+            button.disabled = true;
+            button.textContent = 'Signing In...';
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    console.log('Login Success', userCredential.user);
+                })
+                .catch((error) => {
+                    if (error.code === 'auth/invalid-credential') {
+                        showMessage('Error: Incorrect email or password.', 'error');
+                    } else {
+                        showMessage(`Error: ${error.message}`, 'error');
+                    }
+                })
+                .finally(() => {
+                    button.disabled = false;
+                    button.textContent = 'Sign In';
+                });
+        });
+
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('register-username').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const button = document.getElementById('register-button');
+            button.disabled = true;
+            button.textContent = 'Creating...';
+
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    console.log('Register Success', userCredential.user);
+                })
+                .catch((error) => {
+                    if (error.code === 'auth/email-already-in-use') {
+                        showMessage('Error: This email is already in use.', 'error');
+                    } else if (error.code === 'auth/weak-password') {
+                        showMessage('Error: Password must be at least 6 characters.', 'error');
+                    } else {
+                        showMessage(`Error: ${error.message}`, 'error');
+                    }
+                })
+                .finally(() => {
+                    button.disabled = false;
+                    button.textContent = 'Create Account';
+                });
+        });
+
+        resetForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('reset-email').value;
+            const button = document.getElementById('reset-button');
+            button.disabled = true;
+            button.textContent = 'Sending...';
+
+            sendPasswordResetEmail(auth, email)
+                .then(() => {
+                    showMessage(`Success! Password reset link sent to ${email}`, 'success');
+                    showLogin(); 
+                })
+                .catch((error) => {
+                     if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-email') {
+                        showMessage('Error: No account found with that email.', 'error');
+                    } else {
+                        showMessage(`Error: ${error.message}`, 'error');
+                    }
+                })
+                 .finally(() => {
+                    button.disabled = false;
+                    button.textContent = 'Send Reset Link';
+                });
+        });
+
+        signOutButton.addEventListener('click', () => {
+            signOut(auth).catch((error) => {
+                showMessage(`Error signing out: ${error.message}`, 'error');
+            });
+        });
+
+        function showMessage(message, type) {
+            messageBox.textContent = message;
+            messageBox.className = type; 
+            messageBox.style.display = 'block';
+            
+            setTimeout(() => {
+                messageBox.style.display = 'none';
+            }, 5000);
+        }
+
+    </script>
+</body>
+</html>
+
