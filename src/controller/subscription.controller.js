@@ -1,5 +1,50 @@
 const { db } = require('../config/firebase');
 
+const checkTrialOrSubscription = async (req, res, next) => {
+    try {
+        const userId = req.uid;
+        if (!userId) {
+            return res.status(401).json({ message: 'User not authenticated' });
+        }
+
+        const userDoc = await db.collection('Users').doc(userId).get();
+        if (!userDoc.exists) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const user = userDoc.data();
+
+        const subSnapshot = await db.collection('UserSubscription')
+            .where('StudentID', '==', userId)
+            .where('isActive', '==', true)
+            .get();
+        if (!subSnapshot.empty) {
+            return next();
+        }
+
+        let trialStart = user.trialStart;
+        if (!trialStart) {
+            trialStart = new Date();
+            await db.collection('Users').doc(userId).update({ trialStart });
+        } else {
+            trialStart = new Date(trialStart._seconds ? trialStart._seconds * 1000 : trialStart);
+        }
+
+        const now = new Date();
+        const diffTime = now - trialStart;
+        const diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+        if (diffDays <= 7) {
+            return next();  
+        } else {
+            return res.status(403).json({ message: 'Your 7-day free trial has expired. Please subscribe to continue.' });
+        }
+    } catch (err) {
+        return res.status(500).json({ message: 'Error checking trial/subscription', error: err.message });
+    }
+};
+
+module.exports.checkTrialOrSubscription = checkTrialOrSubscription;
+
 const getAllPlans = async (req, res) => {
     try {
       const snapshot = await db.collection('SubscriptionPlan').get();
