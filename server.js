@@ -1,26 +1,10 @@
-const express = require('express');
-const cors = require('cors');
+const app = require('./app');
 
-const authRoutes = require('./routes/authRoutes');
-const lessonRoutes = require('./routes/lessonRoutes');
-const quizRoutes = require('./routes/quizRoutes');
-const mockExamRoutes = require('./routes/mockExamRoutes');
-const progressRoutes = require('./routes/progressRoutes');
-const subscriptionRoutes = require('./routes/subscriptionRoutes');
-
-const app = express();
-app.use(cors());
-app.use(express.json());
 const port = process.env.PORT || 3000;
 
-app.use('/api/auth', authRoutes);
-app.use('/api/lessons', lessonRoutes);
-app.use('/api/quizzes', quizRoutes);
-app.use('/api/mockexams', mockExamRoutes);
-app.use('/api/progress', progressRoutes);
-app.use('/api/subscriptions', subscriptionRoutes);
-
-app.listen(port, () => {
-  console.log(`E-learning server running on http://localhost:${port}`);
-  console.log('Ready to handle requests!');
-});
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`E-learning server running on http://localhost:${port}`);
+    console.log('Ready to handle requests!');
+  });
+}
