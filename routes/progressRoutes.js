@@ -12,12 +12,14 @@ const {
   getAllMyQuizAttempts,
   getAllMyExamAttempts,
   trackStudyTime,
+  getMyStudyTime,
 } = require("../src/controller/progress.controller");
 
 router.post("/lesson", checkAuth, saveLessonProgress);
 router.post("/quiz", checkAuth, saveQuizAttempt);
 router.post("/exam", checkAuth, saveExamAttempt);
 router.post("/time", checkAuth, trackStudyTime);
+router.get("/time", checkAuth, getMyStudyTime);
 
 router.get("/lesson", checkAuth, getMyLessonProgress);
 router.get("/quiz/all", checkAuth, getAllMyQuizAttempts);

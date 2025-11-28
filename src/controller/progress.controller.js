@@ -186,6 +186,20 @@ const trackStudyTime = async (req, res) => {
   }
 };
 
+const getMyStudyTime = async (req, res) => {
+  try {
+    const snapshot = await db
+      .collection("DailyStudyTime")
+      .where("userId", "==", req.uid)
+      .get();
+
+    const data = snapshot.docs.map((doc) => doc.data());
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching time: " + error.message });
+  }
+};
+
 module.exports = {
   saveLessonProgress,
   saveQuizAttempt,
@@ -196,4 +210,5 @@ module.exports = {
   getAllMyQuizAttempts,
   getAllMyExamAttempts,
   trackStudyTime,
+  getMyStudyTime,
 };
