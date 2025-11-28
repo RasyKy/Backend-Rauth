@@ -1,18 +1,26 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const {
-    saveLessonProgress,
-    saveQuizAttempt,
-    saveExamAttempt,
-    getMyLessonProgress,
-    getMyQuizAttempts
-} = require('../src/controller/progress.controller');
+  saveLessonProgress,
+  saveQuizAttempt,
+  saveExamAttempt,
+  getMyLessonProgress,
+  getMyQuizAttempts,
+  getMyExamAttempts,
+  getAllMyQuizAttempts,
+  getAllMyExamAttempts,
+} = require("../src/controller/progress.controller");
 
-router.post('/lesson', saveLessonProgress);
-router.post('/quiz', saveQuizAttempt);
-router.post('/exam', saveExamAttempt);
+// Save progress/attempts
+router.post("/lesson", saveLessonProgress);
+router.post("/quiz", saveQuizAttempt);
+router.post("/exam", saveExamAttempt);
 
-router.get('/lesson', getMyLessonProgress);
-router.get('/quiz/:quizId', getMyQuizAttempts);
+// Get progress/attempts
+router.get("/lesson", getMyLessonProgress);
+router.get("/quiz/all", getAllMyQuizAttempts);
+router.get("/quiz/:quizId", getMyQuizAttempts);
+router.get("/exam/all", getAllMyExamAttempts);
+router.get("/exam/:examId", getMyExamAttempts);
 
 module.exports = router;
