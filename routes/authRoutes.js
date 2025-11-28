@@ -1,17 +1,35 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { createProfile, getMyProfile, getAllUsers, setRole, forgotPassword, resetPassword } = require('../src/controller/auth.controller');
+const {
+  createProfile,
+  getMyProfile,
+  getAllUsers,
+  setRole,
+  forgotPassword,
+  resetPassword,
+} = require("../src/controller/auth.controller");
+const { checkAuth } = require("../src/middleware/auth.middleware");
 
-router.post('/profile', createProfile);
+const {
+  createProfile,
+  getMyProfile,
+  getAllUsers,
+  setRole,
+  forgotPassword,
+  resetPassword,
+  updateUser,
+} = require("../src/controller/auth.controller");
 
-router.get('/profile', getMyProfile);
+router.post("/profile", createProfile);
 
-router.get('/users', getAllUsers);
+router.put("/profile", checkAuth, updateUser);
 
-router.put('/role', setRole);
+router.get("/users", getAllUsers);
+
+router.put("/role", setRole);
 
 // Password reset endpoints
-router.post('/forgot-password', forgotPassword);
-router.post('/reset-password', resetPassword);
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password", resetPassword);
 
 module.exports = router;
