@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const { checkAuth } = require("../src/middleware/auth.middleware");
+
 const {
   saveLessonProgress,
   saveQuizAttempt,
@@ -11,16 +13,14 @@ const {
   getAllMyExamAttempts,
 } = require("../src/controller/progress.controller");
 
-// Save progress/attempts
-router.post("/lesson", saveLessonProgress);
-router.post("/quiz", saveQuizAttempt);
-router.post("/exam", saveExamAttempt);
+router.post("/lesson", checkAuth, saveLessonProgress);
+router.post("/quiz", checkAuth, saveQuizAttempt);
+router.post("/exam", checkAuth, saveExamAttempt);
 
-// Get progress/attempts
-router.get("/lesson", getMyLessonProgress);
-router.get("/quiz/all", getAllMyQuizAttempts);
-router.get("/quiz/:quizId", getMyQuizAttempts);
-router.get("/exam/all", getAllMyExamAttempts);
-router.get("/exam/:examId", getMyExamAttempts);
+router.get("/lesson", checkAuth, getMyLessonProgress);
+router.get("/quiz/all", checkAuth, getAllMyQuizAttempts);
+router.get("/quiz/:quizId", checkAuth, getMyQuizAttempts);
+router.get("/exam/all", checkAuth, getAllMyExamAttempts);
+router.get("/exam/:examId", checkAuth, getMyExamAttempts);
 
 module.exports = router;
