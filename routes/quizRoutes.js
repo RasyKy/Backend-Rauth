@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { checkAuth } = require("../src/middleware/auth.middleware");
 const {
   createQuiz,
   getAllQuizzes,
@@ -9,11 +10,14 @@ const {
   deleteQuiz,
 } = require("../src/controller/quiz.controller");
 
-router.post("/", createQuiz);
+// ✅ PUBLIC
 router.get("/", getAllQuizzes);
 router.get("/:id", getQuizById);
 router.get("/module/:moduleName", getQuizzesByModule);
-router.put("/:id", updateQuiz);
-router.delete("/:id", deleteQuiz);
+
+// 🔒 PROTECTED
+router.post("/", checkAuth, createQuiz);
+router.put("/:id", checkAuth, updateQuiz);
+router.delete("/:id", checkAuth, deleteQuiz);
 
 module.exports = router;

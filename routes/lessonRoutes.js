@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+// Import checkAuth, but ONLY use it for modifying data
+const { checkAuth } = require("../src/middleware/auth.middleware");
 const {
   createLesson,
   getAllLessons,
@@ -8,10 +10,11 @@ const {
   deleteLesson,
 } = require("../src/controller/lesson.controller");
 
-router.post("/", createLesson);
 router.get("/", getAllLessons);
 router.get("/:id", getLessonById);
-router.put("/:id", updateLesson);
-router.delete("/:id", deleteLesson);
+
+router.post("/", checkAuth, createLesson);
+router.put("/:id", checkAuth, updateLesson);
+router.delete("/:id", checkAuth, deleteLesson);
 
 module.exports = router;
