@@ -1,5 +1,19 @@
 const { db, auth } = require("../config/firebase");
 const nodemailer = require("nodemailer");
+const express = require("express");
+const cors = require("cors");
+
+const app = express();
+
+app.use(
+  cors({
+    origin: true, // Allow any origin (easier for debugging)
+    methods: ["GET", "POST", "PUT", "DELETE"], // Explicitly allow PUT
+    credentials: true,
+  })
+);
+
+app.use(express.json());
 
 const createProfile = async (req, res) => {
   try {
