@@ -1,7 +1,19 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { getExamsByModule } = require('../src/controller/mockexam.controller');
+const {
+  createExam,
+  getAllExams,
+  getExamById,
+  getExamsByModule,
+  updateExam,
+  deleteExam,
+} = require("../src/controller/mockexam.controller");
 
-router.get('/module/:moduleName', getExamsByModule);
+router.post("/", createExam);
+router.get("/", getAllExams);
+router.get("/:id", getExamById);
+router.get("/module/:moduleName", getExamsByModule);
+router.put("/:id", updateExam);
+router.delete("/:id", deleteExam);
 
 module.exports = router;
